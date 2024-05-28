@@ -1,0 +1,15 @@
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/bin/Debug/net7.0/Tanks
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/bin/Debug/net7.0/Tanks.deps.json
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/bin/Debug/net7.0/Tanks.runtimeconfig.json
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/bin/Debug/net7.0/Tanks.dll
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/bin/Debug/net7.0/Tanks.pdb
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.csproj.AssemblyReference.cache
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.GeneratedMSBuildEditorConfig.editorconfig
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.AssemblyInfoInputs.cache
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.AssemblyInfo.cs
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.csproj.CoreCompileInputs.cache
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.dll
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/refint/Tanks.dll
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.pdb
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/Tanks.genruntimeconfig.cache
+/Users/maksimkaspiarovich/Documents/Projects/Tanks/Tanks/obj/Debug/net7.0/ref/Tanks.dll
