@@ -6,8 +6,15 @@ namespace Tanks
 {
 	internal class TankGameLogic : BaseGameLogic, ConsoleInput.IArrowListener
     {
-        TankGemplayState gameplayState = new TankGemplayState();
+        private TankGemplayState gameplayState;
+        private PlayerTankController playerController;
 
+        public TankGameLogic()
+        {
+            var entityManager = new EntityManager();
+            gameplayState = new TankGemplayState(entityManager);
+            playerController = new PlayerTankController(entityManager);
+        }
 
         public void GotoGameplay()
         {
@@ -22,29 +29,29 @@ namespace Tanks
         public override void OnArrowUp()
         {
             if (currentState != gameplayState) return;
-            gameplayState.SetDirection(TankGemplayState.SnakeDir.Up);
-            gameplayState.MovePlayerTank();
+            gameplayState.SetDirection(TankGemplayState.TankDir.Up);
+            playerController.MovePlayerTank();
         }
 
         public override void OnArrowDown()
         {
             if (currentState != gameplayState) return;
-            gameplayState.SetDirection(TankGemplayState.SnakeDir.Down);
-            gameplayState.MovePlayerTank();
+            gameplayState.SetDirection(TankGemplayState.TankDir.Down);
+            playerController.MovePlayerTank();
         }
 
         public override void OnArrowRight()
         {
             if (currentState != gameplayState) return;
-            gameplayState.SetDirection(TankGemplayState.SnakeDir.Right);
-            gameplayState.MovePlayerTank();
+            gameplayState.SetDirection(TankGemplayState.TankDir.Right);
+            playerController.MovePlayerTank();
         }
 
         public override void OnArrowLeft()
         {
             if (currentState != gameplayState) return;
-            gameplayState.SetDirection(TankGemplayState.SnakeDir.Left);
-            gameplayState.MovePlayerTank();
+            gameplayState.SetDirection(TankGemplayState.TankDir.Left);
+            playerController.MovePlayerTank();
         }
 
         public override void Update(float deltaTime)
@@ -57,7 +64,7 @@ namespace Tanks
 
         public override void OnShoot()
         {
-            gameplayState.ShootPlayerTank();
+            playerController.ShootPlayerTank();
         }
 
         public override ConsoleColor[] CreatePalette()

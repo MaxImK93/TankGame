@@ -3,7 +3,7 @@ namespace Tanks
 {
 	internal class TankGemplayState : BaseGameState
 	{
-        public enum SnakeDir
+        public enum TankDir
         {
             Up,
             Down,
@@ -11,36 +11,34 @@ namespace Tanks
             Left
         }
 
-        public SnakeDir currentDir = SnakeDir.Left;
+        public TankDir currentDir = TankDir.Left;
 
-        private List<IGameEntity> entities;
-        private GameMap gameMap; 
+        private GameMap gameMap;
+
         private float timeToMove = 0f;
         private const float MoveInterval = 1f / 4f;
+
         private List<EnemyTankLogic> enemyLogics;
 
-        private List<IGameEntity> entitiesToAdd;
-        private List<IGameEntity> entitiesToRemove;
+        private EntityManager entityManager;
+        private PlayerTankController playerTankController;
 
-
-        public TankGemplayState()
-        {
-            entities = new List<IGameEntity>();
-            gameMap = new GameMap();
-            enemyLogics = new List<EnemyTankLogic>();
-
-            entitiesToAdd = new List<IGameEntity>();
-            entitiesToRemove = new List<IGameEntity>();
-        }
+        Cell tank;
 
         public int fieldWidth { get; set; }
         public int fieldHeight { get; set; }
 
-        Cell tank;
-
-        public void SetDirection(SnakeDir Direction)
+        public TankGemplayState(EntityManager entityManager)
         {
-            Tank playerTank = GetPlayerTank();
+            gameMap = new GameMap();
+            enemyLogics = new List<EnemyTankLogic>();
+            this.entityManager = entityManager;
+            playerTankController = new PlayerTankController(entityManager);
+        }
+
+        public void SetDirection(TankDir Direction)
+        {
+            Tank playerTank = playerTankController.GetPlayerTank();
             if (playerTank != null)
             {
                 playerTank.CurrentDir = Direction;
@@ -49,21 +47,19 @@ namespace Tanks
 
         public override void Reset()
         {
-            var middleY = fieldHeight / 2;
-            var middleX = fieldWidth / 2;
 
-            var playerTank = new Tank(new Cell(15, 15), SnakeDir.Left, Tank.TankType.Player, gameMap);
-            var enemyTank1 = new Tank(new Cell(10, 15), SnakeDir.Right, Tank.TankType.Enemy, gameMap);
-            var enemyTank2 = new Tank(new Cell(20, 13), SnakeDir.Left, Tank.TankType.Enemy, gameMap);
+            var playerTank = new Tank(new Cell(15, 20), TankDir.Left, Tank.TankType.Player, gameMap, entityManager);
+            var enemyTank1 = new Tank(new Cell(10, 15), TankDir.Right, Tank.TankType.Enemy, gameMap, entityManager);
+            var enemyTank2 = new Tank(new Cell(10, 20), TankDir.Left, Tank.TankType.Enemy, gameMap, entityManager);
 
-            entities.Add(playerTank);
-            entities.Add(enemyTank1);
-            entities.Add(enemyTank2);
+            entityManager.AddEntity(playerTank);
+            entityManager.AddEntity(enemyTank1);
+            entityManager.AddEntity(enemyTank2);
 
-            enemyLogics.Add(new EnemyTankLogic(enemyTank1, entities));
-            enemyLogics.Add(new EnemyTankLogic(enemyTank2, entities));
+            enemyLogics.Add(new EnemyTankLogic(enemyTank1, entityManager.GetEntities(), this, entityManager));
+            enemyLogics.Add(new EnemyTankLogic(enemyTank2, entityManager.GetEntities(), this, entityManager));
 
-            currentDir = SnakeDir.Left;
+            currentDir = TankDir.Left;
 
             timeToMove = 0f;
         }
@@ -72,7 +68,7 @@ namespace Tanks
         {
             gameMap.Draw(renderer);
 
-            foreach (var entity in entities)
+            foreach (var entity in entityManager.GetEntities())
             {
                 entity.Draw(renderer);
             }
@@ -87,102 +83,38 @@ namespace Tanks
 
             timeToMove = MoveInterval;
 
-            foreach (var entity in entities)
-            {
-                entity.Update(deltaTime);
-            }
+            entityManager.UpdateEntities(deltaTime);
+            UpdateEnemyLogic(deltaTime);
 
+            entityManager.ProcessEntityChanges();
+        }
+
+        private void UpdateEnemyLogic(float deltaTime)
+        {
             foreach (var logic in enemyLogics)
             {
                 logic.Update(deltaTime);
             }
-
-            if (entitiesToAdd.Count > 0 || entitiesToRemove.Count > 0)
-            {
-                Console.WriteLine($"Добавлено сущностей: {entitiesToAdd.Count}");
-                foreach (var entity in entitiesToAdd)
-                {
-                    entities.Add(entity);
-                }
-                entitiesToAdd.Clear();
-
-                Console.WriteLine($"Удалено сущностей: {entitiesToRemove.Count}");
-                foreach (var entity in entitiesToRemove)
-                {
-                    Console.WriteLine($"Удаляем сущность: {entity.GetType().Name}");
-                    entities.Remove(entity);
-                }
-                entitiesToRemove.Clear();
-            }
         }
-
-
-        public void MovePlayerTank()
-        {
-            Tank playerTank = GetPlayerTank();
-            if (playerTank != null)
-            {
-                playerTank.Move(entities);
-            }
-        }
-
-        public static Cell ShiftTo(Cell from, SnakeDir dir)
+      
+        public static Cell ShiftTo(Cell from, TankDir dir)
         {
 
             switch (dir)
             {
-                case SnakeDir.Up:
+                case TankDir.Up:
                     return new Cell(from._X, from._Y - 1);
-                case SnakeDir.Down:
+                case TankDir.Down:
                     return new Cell(from._X, from._Y + 1);
-                case SnakeDir.Right:
+                case TankDir.Right:
                     return new Cell(from._X + 1, from._Y);
-                case SnakeDir.Left:
+                case TankDir.Left:
                     return new Cell(from._X - 1, from._Y);
 
             }
 
             return from;
         }
-
-        public void ShootPlayerTank()
-        {
-            Console.WriteLine("ShootPlayerTank вызван");
-            Tank playerTank = GetPlayerTank();
-            if (playerTank != null)
-            {
-                Console.WriteLine("Игрок стреляет");
-                playerTank.Shoot(entitiesToAdd, this);
-            }
-        }
-
-        private Tank GetPlayerTank()
-        {
-            foreach (var entity in entities)
-            {
-                if (entity is Tank tank && tank.Type == Tank.TankType.Player)
-                {
-                    return tank;
-                }
-            }
-            return null;
-        }
-
-        public void AddEntity(IGameEntity entity)
-        {
-            entitiesToAdd.Add(entity);
-        }
-
-        public void RemoveEntity(IGameEntity entity)
-        {
-            entitiesToRemove.Add(entity);
-        }
-
-        public List<IGameEntity> GetEntities()
-        {
-            return entities;
-        }
-
 
         public struct Cell
         {

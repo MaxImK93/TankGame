@@ -10,7 +10,6 @@ namespace Tanks
 
         public static void Main(string[] args)
         {
-
             TankGameLogic gameLogic = new TankGameLogic();
 
             var pallette = gameLogic.CreatePalette();

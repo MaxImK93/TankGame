@@ -7,22 +7,22 @@ namespace Tanks
 	internal class Bullet : IGameEntity
 	{
         public Cell Position { get; private set; }
-        public SnakeDir Direction { get; private set; }
+        public TankDir Direction { get; private set; }
 
         public bool IsAlive => throw new NotImplementedException();
 
         private GameMap gameMap;
         private List<IGameEntity> entities;
 
-        private TankGemplayState gameState;
+        private EntityManager entityManager;
 
-        public Bullet(Cell startPosition, SnakeDir direction, GameMap map, TankGemplayState gameState, List<IGameEntity> entities)
+        public Bullet(Cell startPosition, TankDir direction, GameMap map, List<IGameEntity> entities, EntityManager entityManager)
         {
             Position = startPosition;
             Direction = direction;
             gameMap = map;
-            this.gameState = gameState;
             this.entities = entities;
+            this.entityManager = entityManager;
         }
 
         public void Update(float deltaTime)
@@ -40,21 +40,18 @@ namespace Tanks
 
         public void Move()
         {
-            Cell newPosition = TankGemplayState.ShiftTo(Position, Direction);
-            Console.WriteLine($"Попытка переместить пулю в ({newPosition._X}, {newPosition._Y})");
-
+            Cell newPosition = ShiftTo(Position, Direction);
             var obstacle = gameMap.GetObstacleType(newPosition._X, newPosition._Y, entities, null);
 
-            if (obstacle == ObstacleType.Wall)
+            if (obstacle == ObstacleType.Wall || obstacle == ObstacleType.DamagedWall)
             {
-                Console.WriteLine($"Пуля столкнулась со стеной в ({newPosition._X}, {newPosition._Y})");
-                gameState.RemoveEntity(this);
+                gameMap.DamageWall(newPosition._X, newPosition._Y);
+                entityManager.RemoveEntity(this);
                 return;
             }
             else if (obstacle == ObstacleType.Tank)
             {
-                Console.WriteLine($"Пуля попала в танк на позиции ({newPosition._X}, {newPosition._Y})");
-                gameState.RemoveEntity(this);
+                entityManager.RemoveEntity(this);
                 foreach (var entity in entities)
                 {
                     if (entity is Tank tank)
@@ -68,7 +65,7 @@ namespace Tanks
                                 int tankY = tank.Position._Y + i - 1;
                                 if (newPosition._X == tankX && newPosition._Y == tankY)
                                 {
-                                    gameState.RemoveEntity(tank);
+                                    entityManager.RemoveEntity(tank);
                                     break;
                                 }
                             }
@@ -80,8 +77,6 @@ namespace Tanks
 
             Position = newPosition;
         }
-
-
     }
 }
 

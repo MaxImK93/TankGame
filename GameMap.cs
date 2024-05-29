@@ -8,7 +8,9 @@ namespace Tanks
         {
             None,
             Wall,
-            Tank
+            Tank,
+            DamagedWall,
+            Lake
         }
 
         public string[] firstLevelMap;
@@ -34,9 +36,9 @@ namespace Tanks
                 "▓▓▓▓                ▓▓▓▓                ▓▓▓▓            ▓▓▓▓",
                 "▓▓▓▓                                                    ▓▓▓▓",
                 "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
+                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
+                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
+                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
                 "▓▓▓▓                                                    ▓▓▓▓",
                 "▓▓▓▓                                                    ▓▓▓▓",
                 "▓▓▓▓                                                    ▓▓▓▓",
@@ -120,6 +122,16 @@ namespace Tanks
                 return ObstacleType.Wall;
             }
 
+            if (firstLevelMap[y][x] == '░')
+            {
+                return ObstacleType.DamagedWall;
+            }
+
+            if (firstLevelMap[y][x] == '~')
+            {
+                return ObstacleType.Lake;
+            }
+
             foreach (var entity in entities)
             {
                 if (entity is Tank tank && tank != currentTank)
@@ -141,6 +153,20 @@ namespace Tanks
             }
 
             return ObstacleType.None;
+        }
+
+        public void DamageWall(int x, int y)
+        {
+            if (firstLevelMap[y][x] == '▓')
+            {
+                // Изменяем стену на поврежденную
+                firstLevelMap[y] = firstLevelMap[y].Remove(x, 1).Insert(x, "░");
+            }
+            else if (firstLevelMap[y][x] == '░')
+            {
+                // Удаляем поврежденную стену
+                firstLevelMap[y] = firstLevelMap[y].Remove(x, 1).Insert(x, " ");
+            }
         }
 
 

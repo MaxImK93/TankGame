@@ -12,54 +12,30 @@ namespace Tanks
         }
 
         public Cell Position { get; private set; } 
-        public SnakeDir CurrentDir { get; set; } 
+        public TankDir CurrentDir { get; set; }
+
         public bool IsAlive { get; private set; } = true; 
         public float Speed { get; private set; } = 1.0f;
-        public TankType Type { get; private set; }
 
+        public TankType Type { get; private set; }
         private GameMap gameMap;
 
-        public Tank(Cell startPosition, SnakeDir startDir, TankType type, GameMap map)
+        private EntityManager entityManager;
+
+        public Tank(Cell startPosition, TankDir startDir, TankType type, GameMap map, EntityManager entityManager)
 		{
             Position = startPosition;
             CurrentDir = startDir;
             Type = type;
             gameMap = map;
+            this.entityManager = entityManager;
 
         }
 
-        private readonly char[,] tankShapeUp = new char[,]
-        {
-            { ' ', '╥',' '},
-            { '╔', '═','╗'},
-            { '╚', '═','╝'}
-        };
-
-        private readonly char[,] tankShapeDown = new char[,]
-       {
-            { '╔', '═', '╗' },
-            { '╚', '═', '╝' },
-            { ' ', '╨', ' ' }
-       };
-
-        private readonly char[,] tankShapeLeft = new char[,]
-       {
-            { ' ', '╔', '╗' },
-            { '═', ' ', '║' },
-            { ' ', '╚', '╝' }
-       };
-
-        private readonly char[,] tankShapeRight = new char[,]
-       {
-            { '╔', '╗', ' ' },
-            { '║', ' ', '═' },
-            { '╚', '╝', ' ' }
-       };
-
-        public void Move(List<IGameEntity> entities)
+        public void Move()
         {
             var newPosition = TankGemplayState.ShiftTo(Position, CurrentDir);
-            if (CanMoveTo(newPosition, entities))
+            if (CanMoveTo(newPosition, entityManager.GetEntities()))
             {
                 Position = newPosition;
             }
@@ -85,14 +61,12 @@ namespace Tanks
             return true;
         }
 
-        public void Shoot(List<IGameEntity> entitiesToAdd, TankGemplayState gameState)
+        public void Shoot()
         {
             var bulletPosition = TankGemplayState.ShiftTo(Position, CurrentDir);
-            var bullet = new Bullet(bulletPosition, CurrentDir, gameMap, gameState, gameState.GetEntities());
-            entitiesToAdd.Add(bullet);
-            Console.WriteLine($"Создана пуля на позиции ({bulletPosition._X}, {bulletPosition._Y}) с направлением {CurrentDir}");
+            var bullet = new Bullet(bulletPosition, CurrentDir, gameMap, entityManager.GetEntities(), entityManager);
+            entityManager.AddEntity(bullet);
         }
-
 
         public void Draw(ConsoleRenderer renderer)
         {
@@ -114,21 +88,20 @@ namespace Tanks
             }
         }
 
-
         public char[,] GetTankShape()
         {
             switch (CurrentDir)
             {
-                case SnakeDir.Up:
-                    return tankShapeUp;
-                case SnakeDir.Down:
-                    return tankShapeDown;
-                case SnakeDir.Left:
-                    return tankShapeLeft;
-                case SnakeDir.Right:
-                    return tankShapeRight;
+                case TankDir.Up:
+                    return TankShape.Up;
+                case TankDir.Down:
+                    return TankShape.Down;
+                case TankDir.Left:
+                    return TankShape.Left;
+                case TankDir.Right:
+                    return TankShape.Right;
                 default:
-                    return tankShapeUp;
+                    return TankShape.Up;
             }
         }
 
