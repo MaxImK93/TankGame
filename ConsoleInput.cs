@@ -38,6 +38,10 @@ namespace Tanks
                         foreach (var listeners in arrowListeners)
                             listeners.OnArrowLeft();
                         break;
+                    case ConsoleKey.Spacebar:
+                        foreach (var listeners in arrowListeners)
+                            listeners.OnShoot();
+                        break;
 
                 }
             }
@@ -55,6 +59,7 @@ namespace Tanks
 
             public abstract void OnArrowLeft();
 
+            public abstract void OnShoot();
 
         }
 

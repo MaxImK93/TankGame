@@ -4,6 +4,13 @@ namespace Tanks
 {
     internal class GameMap
     {
+        public enum ObstacleType
+        {
+            None,
+            Wall,
+            Tank
+        }
+
         public string[] firstLevelMap;
         private int width;
         private int height;
@@ -101,6 +108,40 @@ namespace Tanks
             return false;
         }
 
+        public ObstacleType GetObstacleType(int x, int y, List<IGameEntity> entities, Tank currentTank)
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height)
+            {
+                return ObstacleType.Wall; // За границами карты считаем стеной
+            }
+
+            if (firstLevelMap[y][x] == '▓')
+            {
+                return ObstacleType.Wall;
+            }
+
+            foreach (var entity in entities)
+            {
+                if (entity is Tank tank && tank != currentTank)
+                {
+                    char[,] tankShape = tank.GetTankShape();
+                    for (int i = 0; i < tankShape.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < tankShape.GetLength(1); j++)
+                        {
+                            int tankX = tank.Position._X + j - 1;
+                            int tankY = tank.Position._Y + i - 1;
+                            if (x == tankX && y == tankY)
+                            {
+                                return ObstacleType.Tank;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ObstacleType.None;
+        }
 
 
         public int Width => width;

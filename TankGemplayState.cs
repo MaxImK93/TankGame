@@ -19,12 +19,18 @@ namespace Tanks
         private const float MoveInterval = 1f / 4f;
         private List<EnemyTankLogic> enemyLogics;
 
+        private List<IGameEntity> entitiesToAdd;
+        private List<IGameEntity> entitiesToRemove;
+
 
         public TankGemplayState()
         {
             entities = new List<IGameEntity>();
             gameMap = new GameMap();
             enemyLogics = new List<EnemyTankLogic>();
+
+            entitiesToAdd = new List<IGameEntity>();
+            entitiesToRemove = new List<IGameEntity>();
         }
 
         public int fieldWidth { get; set; }
@@ -46,8 +52,8 @@ namespace Tanks
             var middleY = fieldHeight / 2;
             var middleX = fieldWidth / 2;
 
-            var playerTank = new Tank(new Cell(15, 15), SnakeDir.Right, Tank.TankType.Player, gameMap);
-            var enemyTank1 = new Tank(new Cell(17, 10), SnakeDir.Right, Tank.TankType.Enemy, gameMap);
+            var playerTank = new Tank(new Cell(15, 15), SnakeDir.Left, Tank.TankType.Player, gameMap);
+            var enemyTank1 = new Tank(new Cell(10, 15), SnakeDir.Right, Tank.TankType.Enemy, gameMap);
             var enemyTank2 = new Tank(new Cell(20, 13), SnakeDir.Left, Tank.TankType.Enemy, gameMap);
 
             entities.Add(playerTank);
@@ -91,7 +97,25 @@ namespace Tanks
                 logic.Update(deltaTime);
             }
 
+            if (entitiesToAdd.Count > 0 || entitiesToRemove.Count > 0)
+            {
+                Console.WriteLine($"Добавлено сущностей: {entitiesToAdd.Count}");
+                foreach (var entity in entitiesToAdd)
+                {
+                    entities.Add(entity);
+                }
+                entitiesToAdd.Clear();
+
+                Console.WriteLine($"Удалено сущностей: {entitiesToRemove.Count}");
+                foreach (var entity in entitiesToRemove)
+                {
+                    Console.WriteLine($"Удаляем сущность: {entity.GetType().Name}");
+                    entities.Remove(entity);
+                }
+                entitiesToRemove.Clear();
+            }
         }
+
 
         public void MovePlayerTank()
         {
@@ -121,6 +145,17 @@ namespace Tanks
             return from;
         }
 
+        public void ShootPlayerTank()
+        {
+            Console.WriteLine("ShootPlayerTank вызван");
+            Tank playerTank = GetPlayerTank();
+            if (playerTank != null)
+            {
+                Console.WriteLine("Игрок стреляет");
+                playerTank.Shoot(entitiesToAdd, this);
+            }
+        }
+
         private Tank GetPlayerTank()
         {
             foreach (var entity in entities)
@@ -132,6 +167,22 @@ namespace Tanks
             }
             return null;
         }
+
+        public void AddEntity(IGameEntity entity)
+        {
+            entitiesToAdd.Add(entity);
+        }
+
+        public void RemoveEntity(IGameEntity entity)
+        {
+            entitiesToRemove.Add(entity);
+        }
+
+        public List<IGameEntity> GetEntities()
+        {
+            return entities;
+        }
+
 
         public struct Cell
         {

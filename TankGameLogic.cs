@@ -53,7 +53,11 @@ namespace Tanks
             {
                 GotoGameplay();
             }
+        }
 
+        public override void OnShoot()
+        {
+            gameplayState.ShootPlayerTank();
         }
 
         public override ConsoleColor[] CreatePalette()

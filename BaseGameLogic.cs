@@ -30,6 +30,11 @@ namespace Tanks
             throw new NotImplementedException();
         }
 
+        public virtual void OnShoot()
+        {
+            throw new NotImplementedException();
+        }
+
         public void InitializeInput(ConsoleInput input)
         {
             input.Subscribe(this);
@@ -56,6 +61,8 @@ namespace Tanks
         }
 
         public abstract void Update(float deltaTime);
+
+       
     }
 }
 

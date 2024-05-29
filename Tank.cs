@@ -63,7 +63,6 @@ namespace Tanks
             {
                 Position = newPosition;
             }
- 
         }
 
         public bool CanMoveTo(Cell position, List<IGameEntity> entities)
@@ -86,7 +85,13 @@ namespace Tanks
             return true;
         }
 
-
+        public void Shoot(List<IGameEntity> entitiesToAdd, TankGemplayState gameState)
+        {
+            var bulletPosition = TankGemplayState.ShiftTo(Position, CurrentDir);
+            var bullet = new Bullet(bulletPosition, CurrentDir, gameMap, gameState, gameState.GetEntities());
+            entitiesToAdd.Add(bullet);
+            Console.WriteLine($"Создана пуля на позиции ({bulletPosition._X}, {bulletPosition._Y}) с направлением {CurrentDir}");
+        }
 
 
         public void Draw(ConsoleRenderer renderer)

@@ -21,8 +21,6 @@ namespace Tanks
             ConsoleInput input = new ConsoleInput();
             gameLogic.InitializeInput(input);
 
-            input.Subscribe((ConsoleInput.IArrowListener)gameLogic);
-
             ConsoleRenderer prevRenderer = renderer0;
             ConsoleRenderer currRenderer = renderer1;
             DateTime lastFrameTime = DateTime.Now;
