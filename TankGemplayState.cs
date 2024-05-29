@@ -22,15 +22,17 @@ namespace Tanks
 
         private EntityManager entityManager;
         private PlayerTankController playerTankController;
+        private MapManager mapManager;
 
         Cell tank;
 
         public int fieldWidth { get; set; }
         public int fieldHeight { get; set; }
 
-        public TankGemplayState(EntityManager entityManager)
+        public TankGemplayState(EntityManager entityManager, MapManager mapManager)
         {
-            gameMap = new GameMap();
+            this.mapManager = mapManager;
+            gameMap = mapManager.GetCurrentMap();
             enemyLogics = new List<EnemyTankLogic>();
             this.entityManager = entityManager;
             playerTankController = new PlayerTankController(entityManager);
@@ -56,8 +58,8 @@ namespace Tanks
             entityManager.AddEntity(enemyTank1);
             entityManager.AddEntity(enemyTank2);
 
-            enemyLogics.Add(new EnemyTankLogic(enemyTank1, entityManager.GetEntities(), this, entityManager));
-            enemyLogics.Add(new EnemyTankLogic(enemyTank2, entityManager.GetEntities(), this, entityManager));
+            enemyLogics.Add(new EnemyTankLogic(enemyTank1, entityManager.GetEntities(), this, entityManager, mapManager));
+            enemyLogics.Add(new EnemyTankLogic(enemyTank2, entityManager.GetEntities(), this, entityManager, mapManager));
 
             currentDir = TankDir.Left;
 

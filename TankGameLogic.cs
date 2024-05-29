@@ -8,11 +8,13 @@ namespace Tanks
     {
         private TankGemplayState gameplayState;
         private PlayerTankController playerController;
+        private MapManager mapManager;
 
-        public TankGameLogic()
+        public TankGameLogic(MapManager mapManager)
         {
             var entityManager = new EntityManager();
-            gameplayState = new TankGemplayState(entityManager);
+            this.mapManager = mapManager;
+            gameplayState = new TankGemplayState(entityManager, mapManager);
             playerController = new PlayerTankController(entityManager);
         }
 

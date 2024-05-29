@@ -13,50 +13,20 @@ namespace Tanks
             Lake
         }
 
-        public string[] firstLevelMap;
+        private string[] mapData;
         private int width;
         private int height;
 
-        public GameMap()
+        public GameMap(string[] mapData)
         {
-            LoadMap();
+            LoadMap(mapData);
         }
 
-        private void LoadMap()
+        private void LoadMap(string[] mapData)
         {
-             firstLevelMap = new string[]
-            {
-                "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-                "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                ▓▓▓▓                ▓▓▓▓            ▓▓▓▓",
-                "▓▓▓▓                ▓▓▓▓                ▓▓▓▓            ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
-                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
-                "▓▓▓▓              ~~~~~                                 ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                                                    ▓▓▓▓",
-                "▓▓▓▓                  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-                "▓▓▓▓                  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-                "▓▓▓▓                                                   ▓▓▓▓▓",
-                "▓▓▓▓                                                   ▓▓▓▓▓",
-                "▓▓▓▓                                                   ▓▓▓▓▓",
-                "▓▓▓▓                           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓▓▓▓▓",
-                "▓▓▓▓                           ▓▓▓▓                    ▓▓▓▓▓",
-                "▓▓▓▓                           ▓▓▓▓                    ▓▓▓▓▓",
-                "▓▓▓▓                           ▓▓▓▓                    ▓▓▓▓▓",
-                "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-                "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓"
-            };
-
-            height = firstLevelMap.Length;
-            width = firstLevelMap[0].Length;
+            this.mapData = mapData;
+            height = mapData.Length;
+            width = mapData[0].Length;
         }
 
         public void Draw(ConsoleRenderer renderer)
@@ -65,7 +35,7 @@ namespace Tanks
             {
                 for (int x = 0; x < Math.Min(width, renderer.width); x++)
                 {
-                    renderer.SetPixel(x, y, firstLevelMap[y][x], 3);
+                    renderer.SetPixel(x, y, mapData[y][x], 3);
                 }
             }
         }
@@ -77,7 +47,7 @@ namespace Tanks
                 return false;
             }
 
-            if (firstLevelMap[y][x] == '▓')
+            if (mapData[y][x] == '▓')
             {
                 return false;
             }
@@ -102,7 +72,7 @@ namespace Tanks
                 }
             }
 
-            if (firstLevelMap[y][x] == ' ')
+            if (mapData[y][x] == ' ')
             {
                 return true;
             }
@@ -117,17 +87,17 @@ namespace Tanks
                 return ObstacleType.Wall; // За границами карты считаем стеной
             }
 
-            if (firstLevelMap[y][x] == '▓')
+            if (mapData[y][x] == '▓')
             {
                 return ObstacleType.Wall;
             }
 
-            if (firstLevelMap[y][x] == '░')
+            if (mapData[y][x] == '░')
             {
                 return ObstacleType.DamagedWall;
             }
 
-            if (firstLevelMap[y][x] == '~')
+            if (mapData[y][x] == '~')
             {
                 return ObstacleType.Lake;
             }
@@ -157,15 +127,15 @@ namespace Tanks
 
         public void DamageWall(int x, int y)
         {
-            if (firstLevelMap[y][x] == '▓')
+            if (mapData[y][x] == '▓')
             {
                 // Изменяем стену на поврежденную
-                firstLevelMap[y] = firstLevelMap[y].Remove(x, 1).Insert(x, "░");
+                mapData[y] = mapData[y].Remove(x, 1).Insert(x, "░");
             }
-            else if (firstLevelMap[y][x] == '░')
+            else if (mapData[y][x] == '░')
             {
                 // Удаляем поврежденную стену
-                firstLevelMap[y] = firstLevelMap[y].Remove(x, 1).Insert(x, " ");
+                mapData[y] = mapData[y].Remove(x, 1).Insert(x, " ");
             }
         }
 

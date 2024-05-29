@@ -10,7 +10,9 @@ namespace Tanks
 
         public static void Main(string[] args)
         {
-            TankGameLogic gameLogic = new TankGameLogic();
+            MapManager mapManager = new MapManager();
+
+            TankGameLogic gameLogic = new TankGameLogic(mapManager);
 
             var pallette = gameLogic.CreatePalette();
 

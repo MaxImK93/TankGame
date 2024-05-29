@@ -15,14 +15,17 @@ namespace Tanks
         private float timeSinceLastShot = 0.0f;
 
         private TankGemplayState gameState;
+        private MapManager mapManager;
 
-        public EnemyTankLogic(Tank tank, List<IGameEntity> entities, TankGemplayState gameState, EntityManager entityManager)
+
+        public EnemyTankLogic(Tank tank, List<IGameEntity> entities, TankGemplayState gameState, EntityManager entityManager, MapManager mapManager)
         {
             enemyTank = tank;
             random = new Random();
-            gameMap = new GameMap();
             this.entityManager = entityManager;
             this.gameState = gameState;
+            this.mapManager = mapManager;
+            gameMap = mapManager.GetCurrentMap();
         }
 
         public void Update(float deltaTime)
@@ -67,7 +70,6 @@ namespace Tanks
 
         private void Shoot()
         {
-            Console.WriteLine($"Enemy tank at ({enemyTank.Position._X}, {enemyTank.Position._Y}) is shooting.");
             enemyTank.Shoot();
         }
 
