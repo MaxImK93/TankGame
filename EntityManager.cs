@@ -54,6 +54,13 @@ namespace Tanks
         {
             return entities;
         }
+
+        public void Clear()
+        {
+            entities.Clear();
+            entitiesToAdd.Clear();
+            entitiesToRemove.Clear();
+        }
     }
 }
 

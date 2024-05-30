@@ -129,12 +129,10 @@ namespace Tanks
         {
             if (mapData[y][x] == '▓')
             {
-                // Изменяем стену на поврежденную
                 mapData[y] = mapData[y].Remove(x, 1).Insert(x, "░");
             }
             else if (mapData[y][x] == '░')
             {
-                // Удаляем поврежденную стену
                 mapData[y] = mapData[y].Remove(x, 1).Insert(x, " ");
             }
         }

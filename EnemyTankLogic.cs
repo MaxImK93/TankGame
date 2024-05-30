@@ -14,16 +14,14 @@ namespace Tanks
         private float shootInterval = 0.1f; 
         private float timeSinceLastShot = 0.0f;
 
-        private TankGemplayState gameState;
         private MapManager mapManager;
 
 
-        public EnemyTankLogic(Tank tank, List<IGameEntity> entities, TankGemplayState gameState, EntityManager entityManager, MapManager mapManager)
+        public EnemyTankLogic(Tank tank, List<IGameEntity> entities, EntityManager entityManager, MapManager mapManager)
         {
             enemyTank = tank;
             random = new Random();
             this.entityManager = entityManager;
-            this.gameState = gameState;
             this.mapManager = mapManager;
             gameMap = mapManager.GetCurrentMap();
         }

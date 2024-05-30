@@ -10,9 +10,11 @@ namespace Tanks
 
         public static void Main(string[] args)
         {
+            EntityManager entityManager = new EntityManager();
             MapManager mapManager = new MapManager();
+            LevelManager levelManager = new LevelManager(mapManager);
 
-            TankGameLogic gameLogic = new TankGameLogic(mapManager);
+            TankGameLogic gameLogic = new TankGameLogic(entityManager, levelManager, mapManager);
 
             var pallette = gameLogic.CreatePalette();
 
