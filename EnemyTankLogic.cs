@@ -6,7 +6,7 @@ namespace Tanks
 {
     internal class EnemyTankLogic
     {
-        private Tank enemyTank;
+        internal Tank enemyTank;
         private Random random;
         private GameMap gameMap;
         private EntityManager entityManager;
@@ -105,7 +105,12 @@ namespace Tanks
             return false;
         }
 
+        public bool IsTankAlive()
+        {
+            return enemyTank.IsAlive;
+        }
 
     }
+
 }
 

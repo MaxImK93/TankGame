@@ -5,11 +5,15 @@ namespace Tanks
 	{
         public string MapKey { get; }
         public int LevelNumber { get; }
+        public TankGemplayState.Cell PlayerStartPosition { get; }
+        public List<TankGemplayState.Cell> EnemyStartPositions { get; }
 
-        public Level(int levelNumber, string mapKey)
+        public Level(int levelNumber, string mapKey, TankGemplayState.Cell playerStartPosition, List<TankGemplayState.Cell> enemyStartPositions)
         {
             LevelNumber = levelNumber;
             MapKey = mapKey;
+            PlayerStartPosition = playerStartPosition;
+            EnemyStartPositions = enemyStartPositions;
         }
 
         public bool IsLevelCompleted(EntityManager entityManager)

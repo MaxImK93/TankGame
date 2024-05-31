@@ -41,6 +41,7 @@ namespace Tanks
         public void Move()
         {
             Cell newPosition = ShiftTo(Position, Direction);
+            Console.WriteLine($"Пуля перемещается с позиции ({Position._X}, {Position._Y}) на позицию ({newPosition._X}, {newPosition._Y}) в направлении {Direction}");
             var obstacle = gameMap.GetObstacleType(newPosition._X, newPosition._Y, entities, null);
 
             if (obstacle == ObstacleType.Wall || obstacle == ObstacleType.DamagedWall)
@@ -51,6 +52,7 @@ namespace Tanks
             }
             else if (obstacle == ObstacleType.Tank)
             {
+                Console.WriteLine($"Пуля попала в танк на позиции ({newPosition._X}, {newPosition._Y})");
                 entityManager.RemoveEntity(this);
                 foreach (var entity in entities)
                 {
@@ -65,6 +67,8 @@ namespace Tanks
                                 int tankY = tank.Position._Y + i - 1;
                                 if (newPosition._X == tankX && newPosition._Y == tankY)
                                 {
+                                    Console.WriteLine($"Удаляем танк на позиции ({tankX}, {tankY})");
+                                    tank.Destroy();
                                     entityManager.RemoveEntity(tank);
                                     break;
                                 }

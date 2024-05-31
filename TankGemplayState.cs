@@ -58,32 +58,25 @@ namespace Tanks
 
         private void LoadLevel()
         {
+            currentLevel = levelManager.GetCurrentLevel();
+            gameMap = new GameMap(mapManager.GetMap(currentLevel.MapKey));
+
             entityManager.Clear();
-            enemyLogics.Clear();
-            var currentLevel = levelManager.GetCurrentLevel();
-            if (currentLevel != null)
+
+            var playerTank = new Tank(currentLevel.PlayerStartPosition, TankDir.Left, Tank.TankType.Player, gameMap, entityManager);
+            entityManager.AddEntity(playerTank);
+
+            foreach (var enemyPosition in currentLevel.EnemyStartPositions)
             {
-                ShowLevelStartMessage(currentLevel.LevelNumber);
-                gameMap = mapManager.GetMap(currentLevel.MapKey);
-                entityManager.Clear();
-                enemyLogics.Clear();
-
-                var playerTank = new Tank(new Cell(15, 20), TankDir.Left, Tank.TankType.Player, gameMap, entityManager);
-                var enemyTank1 = new Tank(new Cell(10, 15), TankDir.Right, Tank.TankType.Enemy, gameMap, entityManager);
-                var enemyTank2 = new Tank(new Cell(10, 20), TankDir.Left, Tank.TankType.Enemy, gameMap, entityManager);
-
-                entityManager.AddEntity(playerTank);
-                entityManager.AddEntity(enemyTank1);
-                entityManager.AddEntity(enemyTank2);
-
-                enemyLogics.Add(new EnemyTankLogic(enemyTank1, entityManager.GetEntities(), entityManager, mapManager));
-                enemyLogics.Add(new EnemyTankLogic(enemyTank2, entityManager.GetEntities(), entityManager, mapManager));
-
-                currentDir = TankDir.Left;
-
-                timeToMove = 0f;
+                var enemyTank = new Tank(enemyPosition, TankDir.Right, Tank.TankType.Enemy, gameMap, entityManager);
+                entityManager.AddEntity(enemyTank);
+                enemyLogics.Add(new EnemyTankLogic(enemyTank, entityManager.GetEntities(), entityManager, mapManager));
             }
+
+            currentDir = TankDir.Left;
+            timeToMove = 0f;
         }
+        
 
         public override void Draw(ConsoleRenderer renderer)
         {
@@ -114,6 +107,24 @@ namespace Tanks
 
         private void UpdateEnemyLogic(float deltaTime)
         {
+
+            List<EnemyTankLogic> logicsToRemove = new List<EnemyTankLogic>();
+
+
+            foreach (var logic in enemyLogics)
+            {
+                if (!logic.IsTankAlive())
+                {
+                    logicsToRemove.Add(logic);
+                }
+            }
+
+
+            foreach (var logic in logicsToRemove)
+            {
+                enemyLogics.Remove(logic);
+            }
+
             foreach (var logic in enemyLogics)
             {
                 logic.Update(deltaTime);

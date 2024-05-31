@@ -64,6 +64,7 @@ namespace Tanks
         public void Shoot()
         {
             var bulletPosition = TankGemplayState.ShiftTo(Position, CurrentDir);
+            Console.WriteLine($"Танк на позиции ({Position._X}, {Position._Y}) стреляет. Пуля создана на позиции ({bulletPosition._X}, {bulletPosition._Y}) с направлением {CurrentDir}");
             var bullet = new Bullet(bulletPosition, CurrentDir, gameMap, entityManager.GetEntities(), entityManager);
             entityManager.AddEntity(bullet);
         }
@@ -88,6 +89,8 @@ namespace Tanks
             }
         }
 
+
+
         public char[,] GetTankShape()
         {
             switch (CurrentDir)
@@ -108,6 +111,11 @@ namespace Tanks
         public void Update(float deltaTime)
         {
           
+        }
+
+        public void Destroy()
+        {
+            IsAlive = false; 
         }
 
     }
