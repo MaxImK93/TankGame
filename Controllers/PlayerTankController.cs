@@ -9,12 +9,9 @@ namespace Tanks.Controllers
         private EntityManager entityManager;
         private Tank playerTank;
 
-        public PlayerTankController(EntityManager entityManager)
-        {
-            this.entityManager = entityManager;
-        }
+        public PlayerTankController(EntityManager entityManager) => this.entityManager = entityManager;
 
-        public Tank GetPlayerTank()
+        public Tank? GetPlayerTank()
         {
             foreach (var entity in entityManager.GetEntities())
             {
@@ -33,7 +30,7 @@ namespace Tanks.Controllers
 
         public void ShootPlayerTank()
         {
-            Tank playerTank = GetPlayerTank();
+            Tank? playerTank = GetPlayerTank();
             if (playerTank != null)
             {
                 playerTank.Shoot();
@@ -42,7 +39,7 @@ namespace Tanks.Controllers
 
         public void MovePlayerTank()
         {
-            Tank playerTank = GetPlayerTank();
+            Tank? playerTank = GetPlayerTank();
             if (playerTank != null)
             {
                 playerTank.Move();

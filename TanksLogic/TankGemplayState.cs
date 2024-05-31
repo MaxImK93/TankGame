@@ -4,11 +4,13 @@ using Tanks.Managers;
 using Tanks.Entities;
 using Tanks.Rendering;
 using Tanks.Controllers;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Tanks.TanksLogic
 {
-	internal class TankGemplayState : BaseGameState
-	{
+    internal class TankGemplayState : BaseGameState
+    {
         public enum TankDir
         {
             Up,
@@ -38,7 +40,7 @@ namespace Tanks.TanksLogic
 
         private Level currentLevel;
 
-        public TankGemplayState(EntityManager entityManager, LevelManager levelManager,MapManager mapManager)
+        public TankGemplayState(EntityManager entityManager, LevelManager levelManager, MapManager mapManager)
         {
             this.entityManager = entityManager;
             this.levelManager = levelManager;
@@ -58,16 +60,19 @@ namespace Tanks.TanksLogic
 
         public override void Reset()
         {
-
             LoadLevel();
         }
 
         private void LoadLevel()
         {
             currentLevel = levelManager.GetCurrentLevel();
+            mapManager.SetCurrentMap(currentLevel.MapKey);
             gameMap = new GameMap(mapManager.GetMap(currentLevel.MapKey));
 
             entityManager.Clear();
+            enemyLogics.Clear();
+
+            ShowLevelStartMessage(currentLevel.LevelNumber);
 
             var playerTank = new Tank(currentLevel.PlayerStartPosition, TankDir.Left, Tank.TankType.Player, gameMap, entityManager);
             entityManager.AddEntity(playerTank);
@@ -82,7 +87,6 @@ namespace Tanks.TanksLogic
             currentDir = TankDir.Left;
             timeToMove = 0f;
         }
-        
 
         public override void Draw(ConsoleRenderer renderer)
         {
@@ -109,27 +113,13 @@ namespace Tanks.TanksLogic
             entityManager.ProcessEntityChanges();
 
             CheckLevelCompletion();
+
+            gameMap.PrintMapWithEntities(entityManager.GetEntities());
         }
 
         private void UpdateEnemyLogic(float deltaTime)
         {
-
-            List<EnemyTankLogic> logicsToRemove = new List<EnemyTankLogic>();
-
-
-            foreach (var logic in enemyLogics)
-            {
-                if (!logic.IsTankAlive())
-                {
-                    logicsToRemove.Add(logic);
-                }
-            }
-
-
-            foreach (var logic in logicsToRemove)
-            {
-                enemyLogics.Remove(logic);
-            }
+            enemyLogics.RemoveAll(logic => !logic.IsTankAlive());
 
             foreach (var logic in enemyLogics)
             {
@@ -172,12 +162,12 @@ namespace Tanks.TanksLogic
                         Console.WriteLine($"Level {currentLevel.LevelNumber} Completed!");
                         Thread.Sleep(3000);
                         levelManager.NextLevel();
+                        mapManager.SetCurrentMap(currentLevel.MapKey);
                         Reset();
                     }
                 }
             }
         }
-
 
         private void ShowLevelStartMessage(int levelNumber)
         {
@@ -190,21 +180,24 @@ namespace Tanks.TanksLogic
 
         public static Cell ShiftTo(Cell from, TankDir dir)
         {
-
+            Cell newPosition = from;
             switch (dir)
             {
                 case TankDir.Up:
-                    return new Cell(from._X, from._Y - 1);
+                    newPosition = new Cell(from._X, from._Y - 1);
+                    break;
                 case TankDir.Down:
-                    return new Cell(from._X, from._Y + 1);
+                    newPosition = new Cell(from._X, from._Y + 1);
+                    break;
                 case TankDir.Right:
-                    return new Cell(from._X + 1, from._Y);
+                    newPosition = new Cell(from._X + 1, from._Y);
+                    break;
                 case TankDir.Left:
-                    return new Cell(from._X - 1, from._Y);
-
+                    newPosition = new Cell(from._X - 1, from._Y);
+                    break;
             }
 
-            return from;
+            return newPosition;
         }
 
         public struct Cell
@@ -217,8 +210,6 @@ namespace Tanks.TanksLogic
                 _X = x;
                 _Y = y;
             }
-
         }
     }
 }
-

@@ -6,10 +6,11 @@ using Tanks.Managers;
 using Tanks.Input;
 using Tanks.Controllers;
 using Tanks.TanksLogic;
+using Tanks.Interfaces;
 
 namespace Tanks.TanksLogic
 {
-	internal class TankGameLogic : BaseGameLogic, ConsoleInput.IArrowListener
+	internal class TankGameLogic : BaseGameLogic, IArrowListener
     {
         private TankGemplayState gameplayState;
         private PlayerTankController playerController;

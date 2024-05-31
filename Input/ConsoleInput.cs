@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tanks.Interfaces;
 
 namespace Tanks.Input
 {
-    public class ConsoleInput
+    public class ConsoleInput : IArrowListener
     {
 
         List<IArrowListener> arrowListeners = new List<IArrowListener>();
@@ -45,21 +46,31 @@ namespace Tanks.Input
                 }
             }
 
-
         }
 
-        public interface IArrowListener
+        public void OnArrowDown()
         {
-            public abstract void OnArrowUp();
+            throw new NotImplementedException();
+        }
 
-            public abstract void OnArrowDown();
+        public void OnArrowLeft()
+        {
+            throw new NotImplementedException();
+        }
 
-            public abstract void OnArrowRight();
+        public void OnArrowRight()
+        {
+            throw new NotImplementedException();
+        }
 
-            public abstract void OnArrowLeft();
+        public void OnArrowUp()
+        {
+            throw new NotImplementedException();
+        }
 
-            public abstract void OnShoot();
-
+        public void OnShoot()
+        {
+            throw new NotImplementedException();
         }
 
     }

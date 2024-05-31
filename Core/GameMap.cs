@@ -20,10 +20,7 @@ namespace Tanks.Core
         private int width;
         private int height;
 
-        public GameMap(string[] mapData)
-        {
-            LoadMap(mapData);
-        }
+        public GameMap(string[] mapData) => LoadMap(mapData);
 
         private void LoadMap(string[] mapData)
         {
@@ -87,21 +84,28 @@ namespace Tanks.Core
         {
             if (x < 0 || x >= width || y < 0 || y >= height)
             {
+                Console.WriteLine($"Проверка позиции ({x}, {y}): Вне карты");
                 return ObstacleType.Wall; // За границами карты считаем стеной
             }
 
-            if (mapData[y][x] == '▓')
+            char mapChar = mapData[y][x];
+            Console.WriteLine($"Проверка позиции ({x}, {y}): {mapChar}");
+
+            if (mapChar == '▓')
             {
+                Console.WriteLine($"Позиция ({x}, {y}) - стена");
                 return ObstacleType.Wall;
             }
 
-            if (mapData[y][x] == '░')
+            if (mapChar == '░')
             {
+                Console.WriteLine($"Позиция ({x}, {y}) - поврежденная стена");
                 return ObstacleType.DamagedWall;
             }
 
-            if (mapData[y][x] == '~')
+            if (mapChar == '~')
             {
+                Console.WriteLine($"Позиция ({x}, {y}) - озеро");
                 return ObstacleType.Lake;
             }
 
@@ -118,6 +122,7 @@ namespace Tanks.Core
                             int tankY = tank.Position._Y + i - 1;
                             if (x == tankX && y == tankY)
                             {
+                                Console.WriteLine($"Позиция ({x}, {y}) - танк");
                                 return ObstacleType.Tank;
                             }
                         }
@@ -125,8 +130,64 @@ namespace Tanks.Core
                 }
             }
 
+            Console.WriteLine($"Позиция ({x}, {y}) - нет препятствий");
             return ObstacleType.None;
         }
+
+
+        public void PrintMapWithEntities(List<IGameEntity> entities)
+        {
+            // Создаем копию карты для добавления сущностей
+            char[,] mapWithEntities = new char[height, width];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    mapWithEntities[y, x] = mapData[y][x];
+                }
+            }
+
+            // Добавляем сущности на карту
+            foreach (var entity in entities)
+            {
+                if (entity is Tank tank)
+                {
+                    char[,] tankShape = tank.GetTankShape();
+                    for (int i = 0; i < tankShape.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < tankShape.GetLength(1); j++)
+                        {
+                            int x = tank.Position._X + j - 1;
+                            int y = tank.Position._Y + i - 1;
+                            if (x >= 0 && x < width && y >= 0 && y < height)
+                            {
+                                mapWithEntities[y, x] = tankShape[i, j];
+                            }
+                        }
+                    }
+                }
+                else if (entity is Bullet bullet)
+                {
+                    int x = bullet.Position._X;
+                    int y = bullet.Position._Y;
+                    if (x >= 0 && x < width && y >= 0 && y < height)
+                    {
+                        mapWithEntities[y, x] = '•';
+                    }
+                }
+            }
+
+            // Выводим карту с сущностями
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Console.Write(mapWithEntities[y, x]);
+                }
+                Console.WriteLine();
+            }
+        }
+
 
         public void DamageWall(int x, int y)
         {

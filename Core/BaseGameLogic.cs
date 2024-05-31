@@ -1,10 +1,11 @@
 ﻿using System;
 using Tanks.Input;
 using Tanks.Rendering;
+using Tanks.Interfaces;
 
 namespace Tanks.Core
 {
-	internal abstract class BaseGameLogic : ConsoleInput.IArrowListener
+	internal abstract class BaseGameLogic : IArrowListener
 	{
         protected BaseGameState? currentState { get; private set; }
         protected float time { get; private set; }
@@ -65,7 +66,6 @@ namespace Tanks.Core
 
         public abstract void Update(float deltaTime);
 
-       
     }
 }
 

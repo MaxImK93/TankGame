@@ -22,7 +22,7 @@ namespace Tanks.Managers
                 }),
                 new Level(2, "Level2", new TankGemplayState.Cell(36, 23), new List<TankGemplayState.Cell>
                 {
-                    new TankGemplayState.Cell(4, 3),
+                    new TankGemplayState.Cell(4, 20),
                     new TankGemplayState.Cell(52, 9)
 
                 }),

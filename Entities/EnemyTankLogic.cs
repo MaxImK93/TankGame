@@ -1,25 +1,26 @@
 ﻿using System;
-using System.Threading.Tasks;
-using static Tanks.TanksLogic.TankGemplayState;
+using System.Collections.Generic;
+using Tanks.Entities;
 using Tanks.Core;
 using Tanks.Managers;
+using Tanks.Controllers;
+using static Tanks.TanksLogic.TankGemplayState;
 using Tanks.Interfaces;
-using Tanks.TanksLogic;
 
-namespace Tanks.Entities
+namespace Tanks.TanksLogic
 {
     internal class EnemyTankLogic
     {
-        internal Tank enemyTank;
+        private Tank enemyTank;
         private Random random;
         private GameMap gameMap;
         private EntityManager entityManager;
 
-        private float shootInterval = 0.1f; 
+        private float shootInterval = 0.1f;
         private float timeSinceLastShot = 0.0f;
 
+        private TankGemplayState gameState;
         private MapManager mapManager;
-
 
         public EnemyTankLogic(Tank tank, List<IGameEntity> entities, EntityManager entityManager, MapManager mapManager)
         {
@@ -60,12 +61,12 @@ namespace Tanks.Entities
 
         private void ChangeDirection()
         {
-            var directions = Enum.GetValues(typeof(TankDir));
-            TankDir newDirection;
+            var directions = Enum.GetValues(typeof(TankGemplayState.TankDir));
+            TankGemplayState.TankDir newDirection;
             do
             {
-                newDirection = (TankDir)directions.GetValue(random.Next(directions.Length));
-            } while (newDirection == enemyTank.CurrentDir); 
+                newDirection = (TankGemplayState.TankDir)directions.GetValue(random.Next(directions.Length));
+            } while (newDirection == enemyTank.CurrentDir);
 
             enemyTank.CurrentDir = newDirection;
         }
@@ -84,10 +85,16 @@ namespace Tanks.Entities
             {
                 position = TankGemplayState.ShiftTo(position, direction);
 
+                if (position._X < 0 || position._X >= gameMap.Width || position._Y < 0 || position._Y >= gameMap.Height)
+                {
+                    return false;
+                }
+
                 var obstacle = gameMap.GetObstacleType(position._X, position._Y, entityManager.GetEntities(), enemyTank);
 
-                if (obstacle == GameMap.ObstacleType.Wall)
+                if (obstacle == GameMap.ObstacleType.Wall || obstacle == GameMap.ObstacleType.DamagedWall)
                 {
+                    Console.WriteLine($"Вижу стену или поврежденную стену в позиции ({position._X}, {position._Y})");
                     return false;
                 }
 
@@ -99,22 +106,18 @@ namespace Tanks.Entities
                         {
                             if (playerTank.Position._X == position._X && playerTank.Position._Y == position._Y)
                             {
+                                Console.WriteLine($"Вижу танк игрока в позиции ({position._X}, {position._Y})");
                                 return true;
                             }
                         }
                     }
                 }
             }
-
-            return false;
         }
 
         public bool IsTankAlive()
         {
             return enemyTank.IsAlive;
         }
-
     }
-
 }
-
