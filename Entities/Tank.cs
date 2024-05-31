@@ -21,19 +21,21 @@ namespace Tanks.Entities
 
         public bool IsAlive { get; private set; } = true; 
         public float Speed { get; private set; } = 1.0f;
+        private int health;
 
         public TankType Type { get; private set; }
         private GameMap gameMap;
 
         private EntityManager entityManager;
 
-        public Tank(Cell startPosition, TankDir startDir, TankType type, GameMap map, EntityManager entityManager)
+        public Tank(Cell startPosition, TankDir startDir, TankType type, GameMap map, EntityManager entityManager, int initialHealth = 2)
 		{
             Position = startPosition;
             CurrentDir = startDir;
             Type = type;
             gameMap = map;
             this.entityManager = entityManager;
+            health = initialHealth;
 
         }
 
@@ -93,6 +95,15 @@ namespace Tanks.Entities
             }
         }
 
+        public void TakeDamage(int damage)
+        {
+            health -= damage;
+            if (health <= 0)
+            {
+                Destroy();
+            }
+        }
+
         public char[,] GetTankShape()
         {
             switch (CurrentDir)
@@ -117,7 +128,8 @@ namespace Tanks.Entities
 
         public void Destroy()
         {
-            IsAlive = false; 
+            IsAlive = false;
+            entityManager.RemoveEntity(this);
         }
 
     }

@@ -70,8 +70,7 @@ namespace Tanks.Entities
                                 int tankY = tank.Position._Y + i - 1;
                                 if (newPosition._X == tankX && newPosition._Y == tankY)
                                 {
-                                    tank.Destroy();
-                                    entityManager.RemoveEntity(tank);
+                                    tank.TakeDamage(1);
                                     break;
                                 }
                             }

@@ -94,7 +94,6 @@ namespace Tanks.TanksLogic
 
                 if (obstacle == GameMap.ObstacleType.Wall || obstacle == GameMap.ObstacleType.DamagedWall)
                 {
-                    Console.WriteLine($"Вижу стену или поврежденную стену в позиции ({position._X}, {position._Y})");
                     return false;
                 }
 
@@ -106,7 +105,6 @@ namespace Tanks.TanksLogic
                         {
                             if (playerTank.Position._X == position._X && playerTank.Position._Y == position._Y)
                             {
-                                Console.WriteLine($"Вижу танк игрока в позиции ({position._X}, {position._Y})");
                                 return true;
                             }
                         }

@@ -33,6 +33,8 @@ namespace Tanks.TanksLogic
         private EntityManager entityManager;
         private PlayerTankController playerTankController;
 
+        private ConsoleWriteManager writeManager; 
+
         Cell tank;
 
         public int fieldWidth { get; set; }
@@ -47,6 +49,7 @@ namespace Tanks.TanksLogic
             this.mapManager = mapManager;
             enemyLogics = new List<EnemyTankLogic>();
             playerTankController = new PlayerTankController(entityManager);
+            writeManager = new ConsoleWriteManager();
         }
 
         public void SetDirection(TankDir Direction)
@@ -113,8 +116,6 @@ namespace Tanks.TanksLogic
             entityManager.ProcessEntityChanges();
 
             CheckLevelCompletion();
-
-            gameMap.PrintMapWithEntities(entityManager.GetEntities());
         }
 
         private void UpdateEnemyLogic(float deltaTime)
@@ -137,30 +138,21 @@ namespace Tanks.TanksLogic
 
                 if (isGameOver)
                 {
-                    Console.Clear();
-                    Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2);
-                    Console.WriteLine("Game Over");
-                    Thread.Sleep(3000);
+                    writeManager.LevelOverWrite("Game Over"); 
                     levelManager.ResetLevels();
                     Reset();
                 }
                 else if (isLevelCompleted)
-                {
+                { 
                     if (levelManager.IsLastLevel())
                     {
-                        Console.Clear();
-                        Console.SetCursorPosition(Console.WindowWidth / 2 - 10, Console.WindowHeight / 2);
-                        Console.WriteLine("Congratulations! You completed the game!");
-                        Thread.Sleep(3000);
+                        writeManager.LevelOverWrite("Congratulations! You completed the game!");
                         levelManager.ResetLevels();
                         Reset();
                     }
                     else
                     {
-                        Console.Clear();
-                        Console.SetCursorPosition(Console.WindowWidth / 2 - 7, Console.WindowHeight / 2);
-                        Console.WriteLine($"Level {currentLevel.LevelNumber} Completed!");
-                        Thread.Sleep(3000);
+                        writeManager.LevelStartMessage(currentLevel.LevelNumber);
                         levelManager.NextLevel();
                         mapManager.SetCurrentMap(currentLevel.MapKey);
                         Reset();
@@ -171,11 +163,7 @@ namespace Tanks.TanksLogic
 
         private void ShowLevelStartMessage(int levelNumber)
         {
-            Console.Clear();
-            Console.SetCursorPosition(Console.WindowWidth / 2 - 10, Console.WindowHeight / 2);
-            Console.WriteLine($"Starting Level {levelNumber}");
-            Thread.Sleep(3000);
-            Console.Clear();
+            writeManager.StartingLevelMessage(levelNumber);
         }
 
         public static Cell ShiftTo(Cell from, TankDir dir)
