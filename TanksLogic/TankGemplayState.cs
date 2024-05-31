@@ -1,5 +1,11 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Core;
+using Tanks.Managers;
+using Tanks.Entities;
+using Tanks.Rendering;
+using Tanks.Controllers;
+
+namespace Tanks.TanksLogic
 {
 	internal class TankGemplayState : BaseGameState
 	{

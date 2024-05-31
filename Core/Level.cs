@@ -1,5 +1,9 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Entities;
+using Tanks.Managers;
+using Tanks.TanksLogic; 
+
+namespace Tanks.Core 
 {
 	internal class Level
 	{

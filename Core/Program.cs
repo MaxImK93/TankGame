@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.IO;
+using Tanks.Managers;
+using Tanks.Input;
+using Tanks.Rendering;
+using Tanks.TanksLogic;
 
-namespace Tanks
+namespace Tanks.Core
 {
     class Program
     {

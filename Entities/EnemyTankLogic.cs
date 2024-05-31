@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using static Tanks.TankGemplayState;
+using static Tanks.TanksLogic.TankGemplayState;
+using Tanks.Core;
+using Tanks.Managers;
+using Tanks.Interfaces;
+using Tanks.TanksLogic;
 
-namespace Tanks
+namespace Tanks.Entities
 {
     internal class EnemyTankLogic
     {

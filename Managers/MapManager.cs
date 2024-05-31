@@ -1,5 +1,7 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Core;
+
+namespace Tanks.Managers
 {
 	internal class MapManager
 	{

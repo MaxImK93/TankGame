@@ -1,8 +1,13 @@
 ﻿using System;
-using static Tanks.ConsoleInput;
-using static Tanks.TankGemplayState;
+using static Tanks.Input.ConsoleInput;
+using static Tanks.TanksLogic.TankGemplayState;
+using Tanks.Core;
+using Tanks.Managers;
+using Tanks.Input;
+using Tanks.Controllers;
+using Tanks.TanksLogic;
 
-namespace Tanks
+namespace Tanks.TanksLogic
 {
 	internal class TankGameLogic : BaseGameLogic, ConsoleInput.IArrowListener
     {

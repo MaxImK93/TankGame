@@ -1,5 +1,8 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Core;
+using Tanks.TanksLogic;
+
+namespace Tanks.Managers
 {
 	internal class LevelManager
 	{

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
-namespace Tanks
+namespace Tanks.Input
 {
     public class ConsoleInput
     {

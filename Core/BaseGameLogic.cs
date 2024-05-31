@@ -1,5 +1,8 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Input;
+using Tanks.Rendering;
+
+namespace Tanks.Core
 {
 	internal abstract class BaseGameLogic : ConsoleInput.IArrowListener
 	{

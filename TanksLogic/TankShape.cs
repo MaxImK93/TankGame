@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Tanks
+namespace Tanks.TanksLogic
 {
 	internal class TankShape
 	{

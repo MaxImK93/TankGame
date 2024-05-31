@@ -1,5 +1,7 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Rendering;
+
+namespace Tanks.Interfaces
 {
     internal interface IGameEntity
     {

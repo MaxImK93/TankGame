@@ -1,5 +1,8 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Entities;
+using Tanks.Managers;
+
+namespace Tanks.Controllers
 {
 	internal class PlayerTankController
 	{

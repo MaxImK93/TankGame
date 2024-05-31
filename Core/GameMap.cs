@@ -1,6 +1,9 @@
 ﻿using System;
+using Tanks.Entities;
+using Tanks.Rendering;
+using Tanks.Interfaces;
 
-namespace Tanks
+namespace Tanks.Core
 {
     internal class GameMap
     {

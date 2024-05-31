@@ -1,5 +1,7 @@
 ﻿using System;
-namespace Tanks
+using Tanks.Interfaces;
+
+namespace Tanks.Managers
 {
 	internal class EntityManager
 	{
