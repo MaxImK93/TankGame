@@ -31,14 +31,12 @@ namespace Tanks.Managers
                 foreach (var entity in entitiesToAdd)
                 {
                     entities.Add(entity);
-                    Console.WriteLine($"Сущность добавлена: {entity.GetType().Name}");
                 }
                 entitiesToAdd.Clear();
 
                 foreach (var entity in entitiesToRemove)
                 {
                     entities.Remove(entity);
-                    Console.WriteLine($"Сущность удалена: {entity.GetType().Name}");
                 }
                 entitiesToRemove.Clear();
             }
@@ -47,13 +45,11 @@ namespace Tanks.Managers
         public void AddEntity(IGameEntity entity)
         {
             entitiesToAdd.Add(entity);
-            Console.WriteLine($"Добавление сущности: {entity.GetType().Name}");
         }
 
         public void RemoveEntity(IGameEntity entity)
         {
             entitiesToRemove.Add(entity);
-            Console.WriteLine($"Удаление сущности: {entity.GetType().Name}");
         }
 
         public List<IGameEntity> GetEntities()
@@ -66,7 +62,6 @@ namespace Tanks.Managers
             entities.Clear();
             entitiesToAdd.Clear();
             entitiesToRemove.Clear();
-            Console.WriteLine("Все сущности очищены");
         }
     }
 }
